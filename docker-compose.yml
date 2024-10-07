@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  ubuntu:
+    image: localserver-ubuntu
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    container_name: ubuntu-local-server
+    command: /usr/sbin/sshd -D
+    environment:
+      - USER=root
+      - PASSWORD=root
+    ports:
+      - "2222:22"
+    networks:
+      - localnet
+    volumes:
+      - ubuntu_data:/data
+    restart: always
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-demo}
+      MYSQL_USER: ${DB_USERNAME:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    ports:
+      - "3306:3306"
+    networks:
+      - localnet
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    depends_on:
+      - mariadb
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_PMADB: ${DB_DATABASE:-demo}
+      PMA_USER: ${DB_USERNAME:-root}
+      PMA_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "8080:80"
+    networks:
+      - localnet
+    restart: always
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-demo}
+      POSTGRES_USER: ${DB_USERNAME:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - localnet
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    networks:
+      - localnet
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - localnet
+    restart: always
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-commander
+    environment:
+      REDIS_HOSTS: local-redis:redis
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - localnet
+    restart: always
+  
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+        MINIO_ROOT_USER: '${MINIO_ROOT_USER:-admin}'
+        MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD:-password123}'
+    volumes:
+        - 'minio_data:/data'
+    ports:
+        - "9000:9000"
+        - "9001:9001"
+    command: server /data --console-address ":9001"
+    networks:
+        - localnet
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    restart: always
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB:-demo}
+      - SONARQUBE_JDBC_USERNAME=${DB_USERNAME:-root}
+      - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD:-root}
+    ports:
+      - "9002:9000"
+    depends_on:
+      - postgres
+    networks:
+      - localnet
+    restart: always
+volumes:
+  mariadb_data:
+  minio_data:
+  postgres_data:
+  ubuntu_data:
+
+networks:
+  localnet:
+    driver: bridge
