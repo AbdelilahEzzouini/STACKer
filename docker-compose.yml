@@ -128,8 +128,8 @@ services:
     container_name: sonarqube
     environment:
       - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB:-demo}
-      - SONARQUBE_JDBC_USERNAME=${DB_USERNAME:-root}
-      - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD:-root}
+      - SONARQUBE_JDBC_USERNAME=${DB_USERNAME:-admin}
+      - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD:-admin}
     ports:
       - "9002:9000"
     depends_on:

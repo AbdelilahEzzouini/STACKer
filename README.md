@@ -171,8 +171,15 @@ http://localhost:9001
 
 This service runs SonarQube for code quality and security analysis. Access it at:
 ```sh
-http://localhost:9000
+http://localhost:9002
 ```
+### Credentials
+
+- **Username**: `admin`
+- **Password**: `admin`
+
+
+---
 
 ## Networks
 
