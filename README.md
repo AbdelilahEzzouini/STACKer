@@ -1,7 +1,7 @@
 
-<div align="center">
+<div align="center" style="max-width:500px;margin:auto" >
 
-![STACKer](https://drive.google.com/u/0/drive-viewer/AKGpihaz8iP3wKFe-kdyO0yylNVwP5WkgQkCVGfNwX6z_AdrHDGcLaHNtTC9Keo6jvYv7HfQd4W5DH6p149HzoWvqE6jV1fHEGLTtQ=s1600-rw-v1)
+![STACKer](src/STACKerLogo.png)
 
 </div >
 
