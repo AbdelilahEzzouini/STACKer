@@ -1,3 +1,10 @@
+
+<div align="center">
+
+![STACKer](https://drive.google.com/u/0/drive-viewer/AKGpihaz8iP3wKFe-kdyO0yylNVwP5WkgQkCVGfNwX6z_AdrHDGcLaHNtTC9Keo6jvYv7HfQd4W5DH6p149HzoWvqE6jV1fHEGLTtQ=s1600-rw-v1)
+
+</div >
+
 # Docker Compose Setup
 This repository contains a `docker-compose.yml` file that sets up multiple services for local development. Below is an explanation of each service and how to use it.
 
