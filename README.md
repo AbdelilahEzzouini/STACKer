@@ -1,4 +1,3 @@
-
 <div align="center" style="max-width:500px;margin:auto" >
 
 ![STACKer](src/STACKerLogo.png)
@@ -185,6 +184,40 @@ http://localhost:9002
 - **Username**: `admin`
 - **Password**: `admin`
 
+### MongoDB
+
+- **Image**: `mongo:latest`
+- **Container Name**: `mongo`
+- **Ports**: `27017:27017`
+- **Environment Variables**:
+    - `MONGO_INITDB_ROOT_USERNAME`: `${DB_USERNAME:-root}`
+    - `MONGO_INITDB_ROOT_PASSWORD`: `${DB_PASSWORD:-root}`
+    - `MONGO_INITDB_DATABASE`: `default-test`
+- **Volumes**:
+    - `mongo_data:/data/db`
+- **Networks**: `localnet`
+- **Restart Policy**: always
+
+This service runs a MongoDB database. You can connect to it using:
+
+
+Mongo Express
+Image: mongo-express:latest
+Container Name: mongo-express
+Depends On: mongo
+Ports: 8082:8081
+Environment Variables:
+ME_CONFIG_MONGODB_URL: mongodb://${DB_USERNAME:-root}:${DB_PASSWORD:-root}@mongo:27017/?authSource=admin
+Networks: localnet
+Restart Policy: always
+This service runs Mongo Express for managing MongoDB. Access it at:
+http://localhost:8082
+Credentials
+Username: admin
+Password: admin
+or the default 
+Username : admin
+Password : pass
 
 ---
 
