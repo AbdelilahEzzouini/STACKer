@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ubuntu:
     image: localserver-ubuntu
@@ -19,6 +17,16 @@ services:
       - ubuntu_data:/data
     restart: always
 
+  it-tools:
+    image: corentinth/it-tools
+    container_name: it-tools
+    ports:
+      - '8888:80'
+    networks:
+      - localnet
+    stdin_open: true
+    tty: true
+  
   mariadb:
     image: mariadb:latest
     container_name: mariadb
@@ -47,12 +55,12 @@ services:
       PMA_PMADB: ${DB_DATABASE:-demo}
       PMA_USER: ${DB_USERNAME:-root}
       PMA_PASSWORD: ${DB_PASSWORD:-root}
+      UPLOAD_LIMIT: 99M
     ports:
       - "8080:80"
     networks:
       - localnet
     restart: always
-
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -80,7 +88,6 @@ services:
     networks:
       - localnet
     restart: always
-
   redis:
     image: redis:latest
     container_name: redis
@@ -101,7 +108,6 @@ services:
     networks:
       - localnet
     restart: always
-  
   minio:
     image: minio/minio
     container_name: minio
@@ -122,7 +128,6 @@ services:
         timeout: 10s
         retries: 5
     restart: always
-
   sonarqube:
     image: sonarqube:latest
     container_name: sonarqube

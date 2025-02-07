@@ -1,4 +1,3 @@
-
 <div align="center" style="max-width:500px;margin:auto" >
 
 ![STACKer](src/STACKerLogo.png)
@@ -32,6 +31,21 @@ ssh root@localhost -p 2222
 Password:
 ```sh
 root
+```
+
+### IT-Tools
+
+- **Image**: `corentinth/it-tools`
+- **Container Name**: `it-tools`
+- **Ports**: `8888:80`
+- **Networks**: `localnet`
+- **Additional Settings**:
+    - `stdin_open`: true
+    - `tty`: true
+
+This service provides a collection of useful IT tools through a web interface. Access it at:
+```sh
+http://localhost:8888
 ```
 
 ### MariaDB
@@ -180,6 +194,8 @@ This service runs SonarQube for code quality and security analysis. Access it at
 ```sh
 http://localhost:9002
 ```
+
+
 ### Credentials
 
 - **Username**: `admin`
